@@ -1,0 +1,33 @@
+Given an array and a target, determine whether two distinct elements sum to that target:
+
+def two_sum(nums, target):
+    seen = set()
+
+    for x in nums:
+        y = target - x
+
+        if y in seen:
+            return True
+
+        seen.add(x)
+
+    return False
+
+
+
+    For the pair
+
+    def two_sum(nums, target):
+    seen = set()
+
+    for x in nums:
+        y = target - x
+
+        if y in seen:
+            return (y, x)
+
+        seen.add(x)
+
+    return None
+
+    
