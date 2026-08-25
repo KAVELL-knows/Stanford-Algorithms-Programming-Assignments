@@ -1,0 +1,90 @@
+def build_graph(edges):
+    """Build a directed graph and its reversed graph."""
+
+    graph = {}
+    reversed_graph = {}
+
+    for u, v in edges:
+        graph.setdefault(u, []).append(v)
+        reversed_graph.setdefault(v, []).append(u)
+
+        graph.setdefault(v, [])
+        reversed_graph.setdefault(u, [])
+
+    return graph, reversed_graph
+
+
+def dfs_first_pass(graph, start, visited, finishing_order):
+    """Run DFS and record vertices by finishing time."""
+
+    stack = [(start, False)]
+    visited.add(start)
+
+    while stack:
+        vertex, finished = stack.pop()
+
+        if finished:
+            finishing_order.append(vertex)
+            continue
+
+        stack.append((vertex, True))
+
+        for neighbor in graph[vertex]:
+            if neighbor not in visited:
+                visited.add(neighbor)
+                stack.append((neighbor, False))
+
+
+def dfs_second_pass(graph, start, visited):
+    """Run DFS and return the size of the SCC found."""
+
+    stack = [start]
+    visited.add(start)
+
+    size = 0
+
+    while stack:
+        vertex = stack.pop()
+        size += 1
+
+        for neighbor in graph[vertex]:
+            if neighbor not in visited:
+                visited.add(neighbor)
+                stack.append(neighbor)
+
+    return size
+
+
+def strongly_connected_components(edges):
+    """ Find all strongly connected components of a directed graph."""
+
+    graph, reversed_graph = build_graph(edges)
+
+    # First pass: DFS on reversed graph
+    visited = set()
+    finishing_order = []
+
+    for vertex in reversed_graph:
+        if vertex not in visited:
+            dfs_first_pass(
+                reversed_graph,
+                vertex,
+                visited,
+                finishing_order
+            )
+
+    # Second pass: DFS on original graph
+    visited = set()
+    scc_sizes = []
+
+    for vertex in reversed(finishing_order):
+        if vertex not in visited:
+            size = dfs_second_pass(
+                graph,
+                vertex,
+                visited
+            )
+
+            scc_sizes.append(size)
+
+    return scc_sizes
