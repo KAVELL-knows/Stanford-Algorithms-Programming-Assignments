@@ -1,0 +1,26 @@
+import heapq
+
+def dijkstra(graph, source):
+    """
+    Generic Dijkstra's algorithm using a Min-Heap.
+    
+    :param graph: Dict where graph[u] = [(v, weight), ...]
+    :param source: The starting node (can be an int, string, etc.)
+    :return: Dict mapping each reachable node to its shortest distance
+    """
+    distances = {source: 0}
+    
+    priority_queue = [(0, source)]
+    
+    while priority_queue:
+        current_distance, current_node = heapq.heappop(priority_queue)
+        
+        if current_distance > distances.get(current_node, float('inf')):
+            continue   
+        for neighbor, weight in graph.get(current_node, []):
+            distance = current_distance + weight
+            
+            if distance < distances.get(neighbor, float('inf')):
+                distances[neighbor] = distance
+                heapq.heappush(priority_queue, (distance, neighbor)) 
+    return distances
