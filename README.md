@@ -1,4 +1,4 @@
-# Stanford-Algorithms-Programming-Assignments
+# Generic-Code-for-Datastructures-and-Algorithms
 This repository comprises of all my Programming Assignments for the 4 courses on Stanford Algorithms Specialization Course
 
 
