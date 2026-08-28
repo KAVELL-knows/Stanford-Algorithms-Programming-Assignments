@@ -1,0 +1,50 @@
+import heapq
+
+
+class MedianTracker:
+    """
+    Generic on-the-fly median tracker.
+
+    Add numbers one at a time and retrieve
+    the current median whenever needed.
+
+    Uses the lower median when the number
+    of elements is even.
+    """
+
+    def __init__(self):
+        # Max-heap for lower half (stored as negatives)
+        self.lower = []
+
+        # Min-heap for upper half
+        self.upper = []
+
+    def add(self, number):
+        """Add a number to the data stream."""
+
+        # Insert into appropriate heap
+        if not self.lower or number <= -self.lower[0]:
+            heapq.heappush(self.lower, -number)
+        else:
+            heapq.heappush(self.upper, number)
+
+        # Rebalance heaps
+        if len(self.lower) > len(self.upper) + 1:
+            heapq.heappush(
+                self.upper,
+                -heapq.heappop(self.lower)
+            )
+
+        elif len(self.upper) > len(self.lower):
+            heapq.heappush(
+                self.lower,
+                -heapq.heappop(self.upper)
+            )
+
+    def get_median(self):
+        """Return the current lower median."""
+
+        if not self.lower:
+            return None
+
+        return -self.lower[0]
